@@ -3,16 +3,22 @@ import socket
 
 def launchReader(filename):
     print("Connecting to server...")
-    connectToServer()
+    connectToServer(filename)
     print("Opening log file " + str(filename))
     logfile = open(filename)
     loglines = follow(logfile)
     ## logic to send to server here
     print("Writing Stream to server")
-    for line in loglines:
+    try:
         
-        writeLineToServer(line)
+        for line in loglines:
+            
+            writeLineToServer(line)
+    except (KeyboardInterrupt, SystemExit):
         
+        print("Done writing, closing connection")
+        s.close()
+    
 
 
 def follow(thefile):
@@ -27,13 +33,15 @@ def follow(thefile):
         yield line
 
 s = socket.socket()
-def connectToServer():
+def connectToServer(filename):
     
     host = socket.gethostname()
     port = 2423
     s.connect((host, port))
     print("connection made, ready...")
-
+    serverinit = "FILENAMETOSAVE:"+ filename + "!"
+    s.send(bytes(serverinit, 'utf-8'))
+    
 
 """
 logfile = open("run/foo/access-log","r")
@@ -41,11 +49,6 @@ logfile = open("run/foo/access-log","r")
     for line in loglines:
         print line,
         """
-
-def writeListToServer(lines):
-    for line in lines:
-        s.send(bytes(line, 'utf-8'))
-
 
 
 def closeConnectionToServer(s):
@@ -61,3 +64,8 @@ def writeLineToServer(line):
         print("error writing to server")
         
 
+if __name__ == "__main__":
+    file = input("enter filename to livecopy: ")
+    launchReader(file)
+    
+    

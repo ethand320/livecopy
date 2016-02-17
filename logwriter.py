@@ -2,7 +2,7 @@ import time
 import socket
 
 def logwriter():
-    startServer()
+    #startServer()
     n = 1
     while True:
         f = open('logfile.txt.', 'a')
