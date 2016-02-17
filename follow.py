@@ -35,7 +35,8 @@ def follow(thefile):
 s = socket.socket()
 def connectToServer(filename):
     
-    host = socket.gethostname()
+    #host = socket.gethostname()
+    host = "162.243.65.65"
     port = 2423
     s.connect((host, port))
     print("connection made, ready...")
